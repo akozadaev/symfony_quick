@@ -1,0 +1,117 @@
+{# templates/default/about.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Simfony quick</h1>
+    <p>Это проект, демонстрирующий базовый функционал Symfony - свободного фреймворка, написанный на языке
+        программирования PHP.</p>
+    <p>Здесь реализовано:
+    <ul>
+        <li>REST API для работы с одной сущностью - Product</li>
+        <li>
+            Методы создания, изменения, получение информации по ID сущности (записи), получение листа всех сущностей,
+            удаления:
+            <ul>
+                <li>
+                    [POST] /product
+                    <br>
+                    <br>
+                    С телом вида:
+                    <br>
+                    {
+                    "name": "Товар",
+                    "price":1000,
+                    "description":"Неведомая хрень"
+                    }
+                    <br>Ответ вида:<br>
+                    {
+                    "id": 14,
+                    "name": "Товар",
+                    "price": 1000,
+                    "description": "Неведомая хрень"
+                    }
+                </li>
+                <br>
+
+                <li>
+                    [PATCH] /product/edit/{id}
+                    <br>
+                    <br>
+                    С телом вида:
+                    <br>
+                    {
+                    "name": "Неизвестный товар овар",
+                    "price":1000000,
+                    "description":"Неведомая хрень номер два"
+                    }
+                    <br>Ответ вида:<br>
+                    {
+                    "id": 2,
+                    "name": "Неизвестный товар овар",
+                    "price": 1000000,
+                    "description": "Неведомая хрень номер два"
+                    }
+                </li>
+                <br>
+
+                <li>
+                    [GET] /product/{id}
+                    <br>
+
+                    <br>Ответ вида:<br>
+                    {
+                    "id": 2,
+                    "name": "Неизвестный товар овар",
+                    "price": 1000000,
+                    "description": "Неведомая хрень номер два"
+                    }
+                </li>
+                <br>
+
+                <li>
+                    [GET] /api/products
+                    <br>
+
+                    <br>Ответ вида:<br>
+                    {
+                    "@context": "/api/contexts/Product",
+                    "@id": "/api/products",
+                    "@type": "hydra:Collection",
+                    "hydra:totalItems": 10,
+                    "hydra:member": [
+                    {
+                    "@id": "/api/products/4",
+                    "@type": "Product",
+                    "id": 4,
+                    "name": "Keyboard",
+                    "price": 1999,
+                    "description": "Ergonomic and stylish!",
+                    "asArray": {
+                    "id": 4,
+                    "name": "Keyboard",
+                    "price": 1999,
+                    "description": "Ergonomic and stylish!"
+                    }
+                    },
+                    ....
+                    }
+                </li>
+                <br>
+
+                <li>
+                    [DELETE] /product/delete/{id}
+                    <br>
+
+                    <br>Ответ вида:<br>
+                    {
+                    "success": true
+                    }
+                </li>
+            </ul>
+            <br>
+        </li>
+        <li>Работа с БД PostgreSQL</li>
+        <li>Обработка исключительных ситуация</li>
+        <li>Журналирование</li>
+    </ul></p>
+{% endblock %}
