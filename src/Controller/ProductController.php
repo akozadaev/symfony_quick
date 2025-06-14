@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-// ...
 use App\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,13 +23,13 @@ class ProductController extends AbstractController
         $product->setPrice($parameters['price']);
         $product->setDescription($parameters['description']);
 
-        $entityManager->persist($product);
-        $entityManager->flush();
-
         $errors = $validator->validate($product);
         if (count($errors) > 0) {
             return new JsonResponse((string)$errors, 400);
         }
+
+        $entityManager->persist($product);
+        $entityManager->flush();
 
         return new JsonResponse($product->getAsArray());
     }
@@ -50,7 +49,7 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/edit/{id}', name: 'product_edit', methods: ['PATCH'])]
-    public function update(EntityManagerInterface $entityManager, int $id, Request $request): Response
+    public function update(EntityManagerInterface $entityManager, int $id, ValidatorInterface $validator, Request $request): Response
     {
         $product = $entityManager->getRepository(Product::class)->find($id);
         $parameters = json_decode($request->getContent(), true);
@@ -63,6 +62,11 @@ class ProductController extends AbstractController
         $product->setName($parameters['name']);
         $product->setPrice($parameters['price']);
         $product->setDescription($parameters['description']);
+
+        $errors = $validator->validate($product);
+        if (count($errors) > 0) {
+            return new JsonResponse((string)$errors, 400);
+        }
 
         $entityManager->flush();
 

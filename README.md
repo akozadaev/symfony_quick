@@ -176,3 +176,7 @@
    ```bash
    symfony server:start
    ```
+предварительно нужно прописать переменную среды
+```bash
+  export PATH="$HOME/.symfony5/bin:$PATH"
+```
