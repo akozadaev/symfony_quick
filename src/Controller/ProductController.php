@@ -2,43 +2,35 @@
 
 namespace App\Controller;
 
+use App\DTO\ProductRequest;
 use App\Entity\Product;
+use App\Service\ProductService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+#[Route('/api/products', name: 'product_')]
 class ProductController extends AbstractController
 {
-    #[Route('/product', name: 'create_product', methods: ['POST'])]
-    public function createProduct(EntityManagerInterface $entityManager, ValidatorInterface $validator, Request $request): Response
+    #[Route('/create', name: 'create', methods: ['POST'])]
+    public function create(
+        #[MapRequestPayload] ProductRequest $dto,
+        ProductService                      $service
+    ): JsonResponse
     {
-        $parameters = json_decode($request->getContent(), true);
-
-        $product = new Product();
-        $product->setName($parameters['name']);
-        $product->setPrice($parameters['price']);
-        $product->setDescription($parameters['description']);
-
-        $errors = $validator->validate($product);
-        if (count($errors) > 0) {
-            return new JsonResponse((string)$errors, 400);
-        }
-
-        $entityManager->persist($product);
-        $entityManager->flush();
-
+        $product = $service->create($dto);
         return new JsonResponse($product->getAsArray());
     }
 
-    #[Route('/product/{id}', name: 'product_show', methods: ['GET'])]
-    public function show(EntityManagerInterface $entityManager, int $id): Response
+    #[Route('/{id}', name: 'show', methods: ['GET'])]
+    public function show(ProductService $service, int $id): Response
     {
-        $product = $entityManager->getRepository(Product::class)->find($id);
-
+        $product = $service->get($id);
         if (!$product) {
             throw $this->createNotFoundException(
                 'No product found for id ' . $id
@@ -48,47 +40,30 @@ class ProductController extends AbstractController
         return new JsonResponse($product->getAsArray());
     }
 
-    #[Route('/product/edit/{id}', name: 'product_edit', methods: ['PATCH'])]
-    public function update(EntityManagerInterface $entityManager, int $id, ValidatorInterface $validator, Request $request): Response
+    #[Route('/edit/{id}', name: 'edit', methods: ['PATCH'])]
+    public function update(ProductService $service, int $id, Request $request): Response
     {
-        $product = $entityManager->getRepository(Product::class)->find($id);
         $parameters = json_decode($request->getContent(), true);
+        $product = $service->edit($id, $parameters);
+
         if (!$product) {
             throw $this->createNotFoundException(
                 'No product found for id ' . $id
             );
         }
-
-        $product->setName($parameters['name']);
-        $product->setPrice($parameters['price']);
-        $product->setDescription($parameters['description']);
-
-        $errors = $validator->validate($product);
-        if (count($errors) > 0) {
-            return new JsonResponse((string)$errors, 400);
-        }
-
-        $entityManager->flush();
-
-        return $this->redirectToRoute('product_show', [
-            'id' => $product->getId()
-        ]);
+        return new JsonResponse($product->getAsArray());
     }
 
-    #[Route('/product/delete/{id}', name: 'product_delete', methods: ['DELETE'])]
-    public function delete(EntityManagerInterface $entityManager, int $id): Response
+    #[Route('/delete/{id}', name: 'delete', methods: ['DELETE'])]
+    public function delete(ProductService $service, int $id): Response
     {
-        $product = $entityManager->getRepository(Product::class)->find($id);
 
-        if (!$product) {
-            throw $this->createNotFoundException(
-                'No product found for id ' . $id
-            );
+        $result = $service->delete($id);
+
+        if ($result) {
+            return new JsonResponse(["success" => true]);
+        } else {
+            return new JsonResponse(["success" => false], 404);
         }
-
-        $entityManager->remove($product);
-        $entityManager->flush();
-
-        return new JsonResponse(["success" => true]);
     }
 }
