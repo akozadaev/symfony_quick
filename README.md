@@ -6,140 +6,140 @@
 
 * **REST API** для работы с одной сущностью — `Product`
 
-* Методы создания, изменения, получения информации по ID сущности (записи), получения списка всех сущностей и удаления:
+  * Методы создания, изменения, получения информации по ID сущности (записи), получения списка всех сущностей и удаления:
 
-    * **\[POST]** `/product`
-      С телом вида:
+      * **\[POST]** `/api/products/create`
+        С телом вида:
 
-      ```json
-      {
-        "name": "Товар",
-        "price": 1000,
-        "description": "Неведомая хрень"
-      }
-      ```
+        ```json
+        {
+          "name": "Товар",
+          "price": 1000,
+          "description": "Неведомая хрень"
+        }
+        ```
 
-      Ответ вида:
+        Ответ вида:
 
-      ```json
-      {
-        "id": 14,
-        "name": "Товар",
-        "price": 1000,
-        "description": "Неведомая хрень"
-      }
-      ```
+        ```json
+        {
+          "id": 14,
+          "name": "Товар",
+          "price": 1000,
+          "description": "Неведомая хрень"
+        }
+        ```
 
-      **Пример curl:**
+        **Пример curl:**
 
-      ```bash
-      curl -X POST http://localhost:8000/product \
-        -H "Content-Type: application/json" \
-        -d '{"name":"Товар", "price":1000, "description":"Неведомая хрень"}'
-      ```
+        ```bash
+        curl -X POST http://localhost:8000/api/products/create \
+          -H "Content-Type: application/json" \
+          -d '{"name":"Товар", "price":1000, "description":"Неведомая хрень"}'
+        ```
 
-    * **\[PATCH]** `/product/edit/{id}`
-      С телом вида:
+      * **\[PATCH]** `/api/products/edit/{id}`
+        С телом вида:
 
-      ```json
-      {
-        "name": "Неизвестный товар овар",
-        "price": 1000000,
-        "description": "Неведомая хрень номер два"
-      }
-      ```
+        ```json
+        {
+          "name": "Неизвестный товар овар",
+          "price": 1000000,
+          "description": "Неведомая хрень номер два"
+        }
+        ```
 
-      Ответ вида:
+        Ответ вида:
 
-      ```json
-      {
-        "id": 2,
-        "name": "Неизвестный товар овар",
-        "price": 1000000,
-        "description": "Неведомая хрень номер два"
-      }
-      ```
+        ```json
+        {
+          "id": 2,
+          "name": "Неизвестный товар овар",
+          "price": 1000000,
+          "description": "Неведомая хрень номер два"
+        }
+        ```
 
-      **Пример curl:**
+        **Пример curl:**
 
-      ```bash
-      curl -X PATCH http://localhost:8000/product/edit/2 \
-        -H "Content-Type: application/json" \
-        -d '{"name":"Неизвестный товар овар", "price":1000000, "description":"Неведомая хрень номер два"}'
-      ```
+        ```bash
+        curl -X PATCH http://localhost:8000/api/products/edit/2 \
+          -H "Content-Type: application/json" \
+          -d '{"name":"Неизвестный товар овар", "price":1000000, "description":"Неведомая хрень номер два"}'
+        ```
 
-    * **\[GET]** `/product/{id}`
-      Ответ вида:
+      * **\[GET]** `/api/products/{id}`
+        Ответ вида:
 
-      ```json
-      {
-        "id": 2,
-        "name": "Неизвестный товар овар",
-        "price": 1000000,
-        "description": "Неведомая хрень номер два"
-      }
-      ```
+        ```json
+        {
+          "id": 2,
+          "name": "Неизвестный товар овар",
+          "price": 1000000,
+          "description": "Неведомая хрень номер два"
+        }
+        ```
 
-      **Пример curl:**
+        **Пример curl:**
 
-      ```bash
-      curl http://localhost:8000/product/2
-      ```
+        ```bash
+        curl http://localhost:8000/api/products/2
+        ```
 
-    * **\[GET]** `/api/products`
-      Ответ вида:
+      * **\[GET]** `/api/products`
+        Ответ вида:
 
-      ```json
-      {
-        "@context": "/api/contexts/Product",
-        "@id": "/api/products",
-        "@type": "hydra:Collection",
-        "hydra:totalItems": 10,
-        "hydra:member": [
-          {
-            "@id": "/api/products/4",
-            "@type": "Product",
-            "id": 4,
-            "name": "Keyboard",
-            "price": 1999,
-            "description": "Ergonomic and stylish!",
-            "asArray": {
-              "id": 4,
-              "name": "Keyboard",
-              "price": 1999,
-              "description": "Ergonomic and stylish!"
-            }
-          }
-          // ...
-        ]
-      }
-      ```
+        ```json
+        {
+          "meta": {
+            "count": 2
+           },
+           "data": [
+           {
+             "id": 5,
+             "name": "Keyboard",
+             "price": 1999,
+             "description": "Ergonomic and stylish!"
+           },
+           {
+             "id": 6,
+             "name": "Товар",
+             "price": 1000,
+             "description": "Неведомая хрень"
+           }
+           ]
+         }
+        ```
 
-      **Пример curl:**
+        **Пример curl:**
 
-      ```bash
-      curl http://localhost:8000/api/products
-      ```
+        ```bash
+        curl http://localhost:8000/api/products
+        ```
 
-    * **\[DELETE]** `/product/delete/{id}`
-      Ответ вида:
+      * **\[DELETE]** `/api/products/delete/{id}`
+        Ответ вида:
 
-      ```json
-      {
-        "success": true
-      }
-      ```
+        ```json
+        {
+          "success": true
+        }
+        ```
 
-      **Пример curl:**
+        **Пример curl:**
 
-      ```bash
-      curl -X DELETE http://localhost:8000/product/delete/2
-      ```
+        ```bash
+        curl -X DELETE http://localhost:8000/api/products/delete/2
+        ```
+    * **\[GET]** `/about`
+    
+    Ответ - html страница
+      ![img.png](img.png)
+    
 
 * Работа с БД PostgreSQL
-
 * Обработка исключительных ситуаций
-
+* Валидация полей объекта
 * Журналирование
 
 ---

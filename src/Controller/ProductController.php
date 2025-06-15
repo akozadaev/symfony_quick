@@ -66,4 +66,21 @@ class ProductController extends AbstractController
             return new JsonResponse(["success" => false], 404);
         }
     }
+
+    #[Route('', name: 'all', methods: ['GET'])]
+    public function all(ProductService $service): Response
+    {
+
+        $result = $service->fetch();
+        $datum = [];
+        /** @var Product $item*/
+        foreach ($result as $item) {
+            $datum[] = $item->getAsArray();
+        }
+        $data = [];
+        $data['meta'] = ['count' =>count($result)];
+        $data['data'] = $datum;
+        return new JsonResponse($data);
+    }
+
 }

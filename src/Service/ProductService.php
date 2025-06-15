@@ -31,6 +31,10 @@ class ProductService
     {
         return $this->em->getRepository(Product::class)->find($id);
     }
+    public function fetch(): array
+    {
+        return $this->em->getRepository(Product::class)->findAll();
+    }
 
     public function delete(int $id): bool
     {

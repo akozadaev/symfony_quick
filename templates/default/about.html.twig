@@ -2,7 +2,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Simfony quick</h1>
+    <h1>Symfony quick</h1>
     <p>Это проект, демонстрирующий базовый функционал Symfony - свободного фреймворка, написанный на языке
         программирования PHP.</p>
     <p>Здесь реализовано:
@@ -13,7 +13,7 @@
             удаления:
             <ul>
                 <li>
-                    [POST] /product
+                    [POST] /api/products/create
                     <br>
                     <br>
                     С телом вида:
@@ -34,7 +34,7 @@
                 <br>
 
                 <li>
-                    [PATCH] /product/edit/{id}
+                    [PATCH] /api/products/edit/{id}
                     <br>
                     <br>
                     С телом вида:
@@ -55,7 +55,7 @@
                 <br>
 
                 <li>
-                    [GET] /product/{id}
+                    [GET] /api/products/{id}
                     <br>
 
                     <br>Ответ вида:<br>
@@ -74,24 +74,21 @@
 
                     <br>Ответ вида:<br>
                     {
-                    "@context": "/api/contexts/Product",
-                    "@id": "/api/products",
-                    "@type": "hydra:Collection",
-                    "hydra:totalItems": 10,
-                    "hydra:member": [
+                    "meta": {
+                    "count": 36
+                    },
+                    "data": [
                     {
-                    "@id": "/api/products/4",
-                    "@type": "Product",
-                    "id": 4,
-                    "name": "Keyboard",
-                    "price": 1999,
-                    "description": "Ergonomic and stylish!",
-                    "asArray": {
-                    "id": 4,
+                    "id": 5,
                     "name": "Keyboard",
                     "price": 1999,
                     "description": "Ergonomic and stylish!"
-                    }
+                    },
+                    {
+                    "id": 6,
+                    "name": "Товар",
+                    "price": 1000,
+                    "description": "Неведомая хрень"
                     },
                     ....
                     }
@@ -99,7 +96,7 @@
                 <br>
 
                 <li>
-                    [DELETE] /product/delete/{id}
+                    [DELETE] /api/products/delete/{id}
                     <br>
 
                     <br>Ответ вида:<br>
@@ -111,7 +108,8 @@
             <br>
         </li>
         <li>Работа с БД PostgreSQL</li>
-        <li>Обработка исключительных ситуация</li>
+        <li>Обработка исключительных ситуаций</li>
+        <li>Валидация полей объекта</li>
         <li>Журналирование</li>
     </ul></p>
 {% endblock %}
