@@ -5,14 +5,15 @@ namespace App\Service;
 use App\DTO\ProductRequest;
 use App\Entity\Product;
 use App\Mapper\ProductMapper;
-use Doctrine\ORM\EntityManager;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ProductService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ProductMapper          $mapper
+        private readonly ProductMapper          $mapper,
+        private readonly ProductRepository      $repository
     )
     {
     }
@@ -29,38 +30,21 @@ class ProductService
 
     public function get(int $id): Product
     {
-        return $this->em->getRepository(Product::class)->find($id);
-    }
-    public function fetch(): array
-    {
-        return $this->em->getRepository(Product::class)->findAll();
+        return $this->repository->findOneBy(['id' => $id]);
     }
 
-    public function delete(int $id): bool
+    public function fetch(): array
     {
-        $product = $this->em->getRepository(Product::class)->find($id);
-        if (empty($product)) {
-            return false;
-        } else {
-            $this->em->remove($product);
-            $this->em->flush();
-            return true;
-        }
+        return $this->repository->findAll();
+    }
+
+    public function delete(int $id): void
+    {
+        $this->repository->delete($id);
     }
 
     public function edit(int $id, mixed $parameters): ?Product
     {
-        $product = $this->em->getRepository(Product::class)->find($id);
-        if (empty($product)) {
-            return $product;
-        } else {
-            $product->setName($parameters['name']);
-            $product->setPrice($parameters['price']);
-            $product->setDescription($parameters['description']);
-
-            $this->em->persist($product);
-            $this->em->flush();
-        }
-        return $product;
+        return $this->repository->update($id, $parameters);
     }
 }

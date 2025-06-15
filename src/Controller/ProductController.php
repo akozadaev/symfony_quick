@@ -57,14 +57,8 @@ class ProductController extends AbstractController
     #[Route('/delete/{id}', name: 'delete', methods: ['DELETE'])]
     public function delete(ProductService $service, int $id): Response
     {
-
-        $result = $service->delete($id);
-
-        if ($result) {
-            return new JsonResponse(["success" => true]);
-        } else {
-            return new JsonResponse(["success" => false], 404);
-        }
+        $service->delete($id);
+            return new Response();
     }
 
     #[Route('', name: 'all', methods: ['GET'])]
